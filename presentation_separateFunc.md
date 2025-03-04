@@ -26,6 +26,9 @@ value_input: <span style="display: inline-block; min-width: 12rem">@1:</span> <s
 
 -->
 
+[![LiaScript](https://raw.githubusercontent.com/LiaScript/LiaScript/master/badges/course.svg)]([https://liascript.github.io/course/?](https://liascript.github.io/course/?https://raw.githubusercontent.com/LiaPlayground/Jupyter2Liascript/refs/heads/main/presentation_separateFunc.md#1))
+
+
 # Jupyter Notebooks -> LiaScript 
 
 Das vorliegende LiaScript Dokument entstand auf der Basis der Notenbooksammlung der [Arbeitsgruppe "Bodenmechanik"](https://tu-freiberg.de/bodenmechanik) der TU Bergakademie Freiberg (Prof. Dr. Thomas Nagel). Es implmentiert ein interaktives Beispiel, um daran die Funktionalität und mögliche Umsetzungvarianten zu erörtern.
