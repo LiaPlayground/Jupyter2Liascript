@@ -29,13 +29,7 @@ value_input: <span style="display: inline-block; min-width: 12rem">@1:</span> <s
 [![LiaScript](https://raw.githubusercontent.com/LiaScript/LiaScript/master/badges/course.svg)]([https://liascript.github.io/course/?](https://liascript.github.io/course/?https://raw.githubusercontent.com/LiaPlayground/Jupyter2Liascript/refs/heads/main/presentation_separateFunc.md#1))
 
 
-# Jupyter Notebooks -> LiaScript 
-
-Das vorliegende LiaScript Dokument entstand auf der Basis der Notenbooksammlung der [Arbeitsgruppe "Bodenmechanik"](https://tu-freiberg.de/bodenmechanik) der TU Bergakademie Freiberg (Prof. Dr. Thomas Nagel). Es implmentiert ein interaktives Beispiel, um daran die Funktionalität und mögliche Umsetzungvarianten zu erörtern.
-
-https://github.com/nagelt/Teaching_Scripts/blob/master/demo_script.ipynb
-
-## Beschreibung von Kornverteilungskurven
+# Beschreibung von Kornverteilungskurven
 
 
 Im Zuge der Bestimmung einer Sieblinie werden Siebrückstände $m_i$ ermittelt. Die einzelnen zu den Siebdurchmessern $d_i$ gehörigen Siebrückstände $m_i$ können nun auf die Gesamtmasse $m_\text{d} = \sum m_i$ (Annahme vernachlässigbarer Siebverluste) bezogen werden, womit die Masseanteile
@@ -71,7 +65,7 @@ abgeleitet werden.
 > ![](notebook.png)
 
 
-### Variante 1: Interaktive Darstellung ohne Widgets
+## Variante 1: Interaktive Darstellung ohne Widgets
 
 > Änderungen an den Körnungsparametern sind im Python Code vorzunehmen.
 
@@ -99,7 +93,7 @@ plt.show()
 plt
 ```
 
-### Variante 2: Interaktive Darstellung mit Widgets und sichtbarem Code
+## Variante 2: Interaktive Darstellung mit Widgets und sichtbarem Code
 
 > Für das Triggern der neuen Berechnung und Ausgabe muss nach der Änderung der Werte der grüne Button in der Ecke beider, aufeinander aufbauender Codeblöcke aktiviert werden.
 
@@ -144,7 +138,7 @@ plt.show()
 plt
 ```
 
-### Variante 3: Automatische Weiterleitung von Änderungen an die Darstellung
+## Variante 3: Automatische Weiterleitung von Änderungen an die Darstellung
 
 > Die Darstellung wird automatisch aktualisiert, sobald der Werte geändert wurden.
 
