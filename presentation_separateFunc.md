@@ -13,7 +13,7 @@ persistent: true
 ```
 @end
 
-value_input: <span style="display: inline-block; min-width: 12rem">@1:</span> <script 
+value_input: <span style="display: inline-block; min-width: 9rem">@1:</span> <script 
                  input="range"
                  output="@0"
                  value=@2
@@ -111,7 +111,7 @@ plt
 @value_input(l,$ 0.001\ \text{mm}$,0,-100,200)
 
 
-<script style="display: block" modify="false" run-once>
+<script style="display: block" modify="false" inert tabindex="-1" run-once>
 `LIASCRIPT:
 \`\`\` python @PyScript.repl
 input_values = [@input(`a`), @input(`b`), @input(`c`), @input(`d`), @input(`e`), @input(`f`), @input(`g`), @input(`h`), @input(`i`), @input(`j`), @input(`k`), @input(`l`)]
