@@ -22,8 +22,17 @@ value_input: <span style="display: inline-block; min-width: 9rem">@1:</span> <sc
                  max="@4"
                  step="0.1"
                  modify="false"
-             >@input</script><br>
+             >@input</script>
 
+@python_evaluate
+<script style="display: block" inert tabindex="-1" modify="false" run-once>
+`LIASCRIPT:
+\`\`\` python @PyScript.repl
+@0
+\`\`\`
+`
+</script>
+@end
 -->
 
 [![LiaScript](https://raw.githubusercontent.com/LiaScript/LiaScript/master/badges/course.svg)]([https://liascript.github.io/course/?](https://liascript.github.io/course/?https://raw.githubusercontent.com/LiaPlayground/Jupyter2Liascript/refs/heads/main/presentation_separateFunc.md#1))
@@ -97,28 +106,24 @@ plt
 
 > Für das Triggern der neuen Berechnung und Ausgabe muss nach der Änderung der Werte der grüne Button in der Ecke beider, aufeinander aufbauender Codeblöcke aktiviert werden.
 
-@value_input(a,$63.0\ \text{mm}$,0,-100,200)
-@value_input(b,$31.5\ \text{mm}$,0,-100,200)
-@value_input(c,$16.0\ \text{mm}$,842.4,-100,2000)
-@value_input(d,$ 8.0\ \text{mm}$,1059.8,-100,2000)
-@value_input(e,$ 4.0\ \text{mm}$,1222.9,-100,2000)
-@value_input(f,$ 2.0\ \text{mm}$,788.0,-100,2000)
-@value_input(g,$ 1.0\ \text{mm}$,706.6,-100,2000)
-@value_input(h,$ 0.5\ \text{mm}$,407.6,-100,2000)
-@value_input(i,$ 0.25\ \text{mm}$,210.0,-100,2000)
-@value_input(j,$ 0.125\ \text{mm}$,195.7,-100,2000)
-@value_input(k,$ 0.063\ \text{mm}$,0,-100,200)
+@value_input(a,$63.0\ \text{mm}$,0,-100,200) \
+@value_input(b,$31.5\ \text{mm}$,0,-100,200) \
+@value_input(c,$16.0\ \text{mm}$,842.4,-100,2000) \
+@value_input(d,$ 8.0\ \text{mm}$,1059.8,-100,2000) \
+@value_input(e,$ 4.0\ \text{mm}$,1222.9,-100,2000) \
+@value_input(f,$ 2.0\ \text{mm}$,788.0,-100,2000) \
+@value_input(g,$ 1.0\ \text{mm}$,706.6,-100,2000) \
+@value_input(h,$ 0.5\ \text{mm}$,407.6,-100,2000) \
+@value_input(i,$ 0.25\ \text{mm}$,210.0,-100,2000) \
+@value_input(j,$ 0.125\ \text{mm}$,195.7,-100,2000) \
+@value_input(k,$ 0.063\ \text{mm}$,0,-100,200) \
 @value_input(l,$ 0.001\ \text{mm}$,0,-100,200)
 
 
-<script style="display: block" modify="false" inert tabindex="-1" run-once>
-`LIASCRIPT:
-\`\`\` python @PyScript.repl
+``` python @python_evaluate
 input_values = [@input(`a`), @input(`b`), @input(`c`), @input(`d`), @input(`e`), @input(`f`), @input(`g`), @input(`h`), @input(`i`), @input(`j`), @input(`k`), @input(`l`)]
 print(input_values)
-\`\`\`
-`
-</script>
+```
 
 @[path](functions.py)
 
@@ -142,24 +147,22 @@ plt
 
 > Die Darstellung wird automatisch aktualisiert, sobald der Werte geändert wurden.
 
-@value_input(a,$63.0\ \text{mm}$,0,-100,200)
-@value_input(b,$31.5\ \text{mm}$,0,-100,200)
-@value_input(c,$16.0\ \text{mm}$,842.4,-100,2000)
-@value_input(d,$ 8.0\ \text{mm}$,1059.8,-100,2000)
-@value_input(e,$ 4.0\ \text{mm}$,1222.9,-100,2000)
-@value_input(f,$ 2.0\ \text{mm}$,788.0,-100,2000)
-@value_input(g,$ 1.0\ \text{mm}$,706.6,-100,2000)
-@value_input(h,$ 0.5\ \text{mm}$,407.6,-100,2000)
-@value_input(i,$ 0.25\ \text{mm}$,210.0,-100,2000)
-@value_input(j,$ 0.125\ \text{mm}$,195.7,-100,2000)
-@value_input(k,$ 0.063\ \text{mm}$,0,-100,200)
+@value_input(a,$63.0\ \text{mm}$,0,-100,200) \
+@value_input(b,$31.5\ \text{mm}$,0,-100,200) \
+@value_input(c,$16.0\ \text{mm}$,842.4,-100,2000) \
+@value_input(d,$ 8.0\ \text{mm}$,1059.8,-100,2000) \
+@value_input(e,$ 4.0\ \text{mm}$,1222.9,-100,2000) \
+@value_input(f,$ 2.0\ \text{mm}$,788.0,-100,2000) \
+@value_input(g,$ 1.0\ \text{mm}$,706.6,-100,2000) \
+@value_input(h,$ 0.5\ \text{mm}$,407.6,-100,2000) \
+@value_input(i,$ 0.25\ \text{mm}$,210.0,-100,2000) \
+@value_input(j,$ 0.125\ \text{mm}$,195.7,-100,2000) \
+@value_input(k,$ 0.063\ \text{mm}$,0,-100,200) \
 @value_input(l,$ 0.001\ \text{mm}$,0,-100,200)
 
 @[path](functions.py)
 
-<script style="display: block" inert tabindex="-1" modify="false" run-once>
-`LIASCRIPT:
-\`\`\` python @PyScript.repl
+``` python @python_evaluate
 import matplotlib.pyplot as plt
 import matplotlib.tri as tri
 import numpy as np
@@ -174,9 +177,7 @@ Startwerte = np.array(input_values)
 plot_KVK_glob(True, Startwerte, Siebdurchmesser)
 plt.show()
 plt
-\`\`\`
-`
-</script>
+```
 
 ## Lessons Learned
 
