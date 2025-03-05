@@ -14,18 +14,32 @@ persistent: true
 @end
 
 value_input: <span style="display: inline-block; min-width: 9rem">@1:</span> <script 
-                 input="range"
-                 output="@0"
-                 value=@2
-                 input-always-active
-                 min="@3"
-                 max="@4"
-                 step="0.1"
-                 modify="false"
-             >@input</script>
+                input="range"
+                output="@0"
+                value=@2
+                input-always-active
+                min="@3"
+                max="@4"
+                step="0.1"
+                modify="false"
+            >
+            const elements = document.getElementsByClassName("inert");
+
+            for (let i = 0; i < elements.length; i++) {
+                elements[i].setAttribute("inert", "");
+            }
+
+            setTimeout(() => {
+                for (let i = 0; i < elements.length; i++) {
+                    elements[i].removeAttribute("inert");
+                }
+            }, 500);
+
+            @input
+            </script>
 
 @python_evaluate
-<script style="display: block" inert tabindex="-1" modify="false" run-once>
+<script class="inert" style="display: block" modify="false" run-once>
 `LIASCRIPT:
 \`\`\` python @PyScript.repl
 @0
