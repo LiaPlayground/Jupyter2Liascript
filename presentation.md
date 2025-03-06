@@ -347,6 +347,10 @@ function plotKVKGlob(inputValues, siebdurchmesser) {
     },
     yAxis: {
       type: 'value',
+      name: 'Siebdurchgang in %',
+      nameLocation: 'middle',  // Positioniert den Achsentitel in der Mitte
+      nameGap: 25,             // Abstand zwischen Achse und Titel (anpassbar)
+      nameTextStyle: { fontSize: 18 },
       min: 0,
       max: 100,
       axisLabel: { formatter: '{value}' }
@@ -408,37 +412,16 @@ function plotKVKGlob(inputValues, siebdurchmesser) {
         itemStyle: { color: '#000' }
       },
       {
-        name: 'Wichtige Punkte',
-        type: 'scatter',
-        data: [
-          [d10, 10],
-          [d30, 30],
-          [d60, 60]
-        ],
-        itemStyle: { color: 'red' },
-        label: {
-          show: true,
-          fontSize: 18,
-          color: 'red',
-          formatter: function(params) {
-            if (params.data[1] === 10) {
-              return 'd10 = ' + d10.toFixed(3) + ' mm';
-            } else if (params.data[1] === 30) {
-              return 'd30 = ' + d30.toFixed(3) + ' mm';
-            } else if (params.data[1] === 60) {
-              return 'd60 = ' + d60.toFixed(3) + ' mm';
-            }
-            return '';
-          }
-        }
-      },
-      {
         // Zusätzliche Annotationen (Gradationscharakterisierung)
         name: 'Annotations',
         type: 'scatter',
         data: [],
         markPoint: {
-          symbol: 'none',
+          symbol: '',
+          itemStyle: {
+            color: 'transparent',   // Fill color transparent
+            borderColor: 'transparent'
+          },
           label: {
             fontSize: 18,
             color: '#000'
@@ -446,13 +429,49 @@ function plotKVKGlob(inputValues, siebdurchmesser) {
           data: [
             {
               coord: [8, 12],
-              label: { formatter: U_res + ':' }
+              label: { formatter: "U_res: " + U_res }
             },
             {
               coord: [8, 5],
               label: { formatter: "C_U = " + U.toFixed(1) + ", C_C = " + Cc.toFixed(1) }
             }
           ]
+        }
+      },
+      {
+        name: 'Wichtige Punkte',
+        type: 'scatter',
+        data: [
+          [d10,10],
+          [d30,30],
+          [d60,60]
+        ],
+        color: 'red',
+        markPoint: {
+        itemStyle: {
+            color: 'transparent',   // Fill color transparent
+            borderColor: 'transparent'
+          },
+          label: {
+            fontSize: 18,
+            color: 'red'
+          },
+        data: [
+          {
+          coord: [d10, 10],
+          label: { formatter: 'd_10 = ' + d10.toFixed(3) + ' mm' }
+          },
+          {
+          coord: [d30, 30],
+          label: { formatter: 'd_30 = ' + d30.toFixed(3) + ' mm' }
+          },
+          {
+          coord: [d60, 60],
+          label: { formatter: 'd_60 = ' + d60.toFixed(3) + ' mm' }
+          }
+          //[d30, 30],
+          //[d60, 60]
+        ],
         }
       }
     ]
