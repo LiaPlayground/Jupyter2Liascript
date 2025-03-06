@@ -84,18 +84,18 @@ aufgetragen. Dabei wird aufgrund der über Größenordnungen verteilten Korndurc
 Mithilfe der Körnungslinie bzw. Kornverteilungskurve können die dominierenden Bestandteile (T, U, S, G) ermittelt werden. Des weiteren können die Ungleichförmigkeitszahl
 
 $$
-    C_U = \frac{d_{60}}{d_{10}}
+    C_\text{U} = \frac{d_{60}}{d_{10}}
 $$
 
 und die Krümmungszahl
 
 $$
-    C_C = \frac{d_{30}^2}{d_{10}\ d_{60}}
+    C_\text{C} = \frac{d_{30}^2}{d_{10}\ d_{60}}
 $$
 
 abgeleitet werden. 
 
-> In den Jupyter Notebooks erfolgt die Eingabe der Massen pro Siebdurchmesser als ein interaktives Element, in den die Körnungsparameter eingegeben werden können und die Kornverteilungskurve neu berechnet wird.
+> In den Jupyter Notebooks erfolgt die Eingabe der Massen pro Siebdurchmesser als ein interaktives Element, in den die Siebrückstände eingegeben werden können und die Kornverteilungskurve neu berechnet wird.
 > 
 > ![](notebook.png)
 >
@@ -139,18 +139,18 @@ plt
 >
 > Achtung: Die Berechnung dauert einige Sekunden. Falls ein `JsException` Fehler auftritt, bitte mit F5 noch mal laden.
 
-@value_input(a,$63.0\ \text{mm}$,0,-100,200) \
-@value_input(b,$31.5\ \text{mm}$,0,-100,200) \
-@value_input(c,$16.0\ \text{mm}$,842.4,-100,2000) \
-@value_input(d,$ 8.0\ \text{mm}$,1059.8,-100,2000) \
-@value_input(e,$ 4.0\ \text{mm}$,1222.9,-100,2000) \
-@value_input(f,$ 2.0\ \text{mm}$,788.0,-100,2000) \
-@value_input(g,$ 1.0\ \text{mm}$,706.6,-100,2000) \
-@value_input(h,$ 0.5\ \text{mm}$,407.6,-100,2000) \
-@value_input(i,$ 0.25\ \text{mm}$,210.0,-100,2000) \
-@value_input(j,$ 0.125\ \text{mm}$,195.7,-100,2000) \
-@value_input(k,$ 0.063\ \text{mm}$,0,-100,200) \
-@value_input(l,$ 0.001\ \text{mm}$,0,-100,200)
+@value_input(a,$63.0\ \text{mm}$,0,0,2000) \
+@value_input(b,$31.5\ \text{mm}$,0,0,2000) \
+@value_input(c,$16.0\ \text{mm}$,842.4,0,2000) \
+@value_input(d,$ 8.0\ \text{mm}$,1059.8,0,2000) \
+@value_input(e,$ 4.0\ \text{mm}$,1222.9,0,2000) \
+@value_input(f,$ 2.0\ \text{mm}$,788.0,0,2000) \
+@value_input(g,$ 1.0\ \text{mm}$,706.6,0,2000) \
+@value_input(h,$ 0.5\ \text{mm}$,407.6,0,2000) \
+@value_input(i,$ 0.25\ \text{mm}$,210.0,0,2000) \
+@value_input(j,$ 0.125\ \text{mm}$,195.7,0,2000) \
+@value_input(k,$ 0.063\ \text{mm}$,0,0,2000) \
+@value_input(l,$ 0.001\ \text{mm}$,0,0,2000)
 
 @[path](functions.py)
 
@@ -174,20 +174,20 @@ plt
 
 ## Variante 3: KI basierte Umsetzung in JavaScript
 
-> Ausgehend von der existierenden Implementierung in Python wurde ein JavaScript-Code generiert. Die Realsierung illustriert den Geschwindigkeitsvorteil bei der navtiven Ausführung von JavaScript im Browser.
+> Ausgehend von der existierenden Implementierung in Python wurde ein JavaScript-Code generiert. Die Realsierung illustriert den Geschwindigkeitsvorteil bei der nativen Ausführung von JavaScript im Browser.
 
-@value_input(a,$63.0\ \text{mm}$,0,-100,200) \
-@value_input(b,$31.5\ \text{mm}$,0,-100,200) \
-@value_input(c,$16.0\ \text{mm}$,842.4,-100,2000) \
-@value_input(d,$ 8.0\ \text{mm}$,1059.8,-100,2000) \
-@value_input(e,$ 4.0\ \text{mm}$,1222.9,-100,2000) \
-@value_input(f,$ 2.0\ \text{mm}$,788.0,-100,2000) \
-@value_input(g,$ 1.0\ \text{mm}$,706.6,-100,2000) \
-@value_input(h,$ 0.5\ \text{mm}$,407.6,-100,2000) \
-@value_input(i,$ 0.25\ \text{mm}$,210.0,-100,2000) \
-@value_input(j,$ 0.125\ \text{mm}$,195.7,-100,2000) \
-@value_input(k,$ 0.063\ \text{mm}$,0,-100,200) \
-@value_input(l,$ 0.001\ \text{mm}$,0,-100,200)
+@value_input(a,$63.0\ \text{mm}$,0,0,2000) \
+@value_input(b,$31.5\ \text{mm}$,0,0,2000) \
+@value_input(c,$16.0\ \text{mm}$,842.4,0,2000) \
+@value_input(d,$ 8.0\ \text{mm}$,1059.8,0,2000) \
+@value_input(e,$ 4.0\ \text{mm}$,1222.9,0,2000) \
+@value_input(f,$ 2.0\ \text{mm}$,788.0,0,2000) \
+@value_input(g,$ 1.0\ \text{mm}$,706.6,0,2000) \
+@value_input(h,$ 0.5\ \text{mm}$,407.6,0,2000) \
+@value_input(i,$ 0.25\ \text{mm}$,210.0,0,2000) \
+@value_input(j,$ 0.125\ \text{mm}$,195.7,0,2000) \
+@value_input(k,$ 0.063\ \text{mm}$,0,0,2000) \
+@value_input(l,$ 0.001\ \text{mm}$,0,0,2000)
 
 <script style="display: block">
 // Hilfsfunktionen
