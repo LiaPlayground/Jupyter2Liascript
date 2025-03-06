@@ -61,7 +61,7 @@ value_input: <span style="display: inline-block; min-width: 9rem">@1:</span> <sc
 
 [![LiaScript](https://raw.githubusercontent.com/LiaScript/LiaScript/master/badges/course.svg)](https://liascript.github.io/course/?https://raw.githubusercontent.com/LiaPlayground/Jupyter2Liascript/refs/heads/main/presentation.md)
 
-[![LiaScript](https://raw.githubusercontent.com/LiaScript/LiaScript/master/badges/edit.svg)](https://liascript.github.io/LiveEditor/?/show/file/https://liascript.github.io/course/?https://raw.githubusercontent.com/LiaPlayground/Jupyter2Liascript/refs/heads/main/presentation.md)
+[![LiaScript](https://raw.githubusercontent.com/LiaScript/LiaScript/master/badges/edit.svg)](https://liascript.github.io/LiveEditor/?/show/file/https://raw.githubusercontent.com/LiaPlayground/Jupyter2Liascript/refs/heads/main/presentation.md)
 
 
 # Beschreibung von Kornverteilungskurven
