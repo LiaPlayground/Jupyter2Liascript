@@ -429,11 +429,22 @@ function plotKVKGlob(inputValues, siebdurchmesser) {
           data: [
             {
               coord: [8, 12],
-              label: { formatter: "U_res: " + U_res }
+              label: {
+                formatter: '{normal|U}{sub|res}: ' + U_res,
+                rich: {
+                  normal: { fontSize: 14 },
+                  sub:    { fontSize: 10, verticalAlign: 'bottom' }
+  }
+}//{ formatter: "U_res: " + U_res }
             },
             {
               coord: [8, 5],
-              label: { formatter: "C_U = " + U.toFixed(1) + ", C_C = " + Cc.toFixed(1) }
+              label: { formatter: "{normal|C}{sub|U} = " + U.toFixed(1) + ", {normal|C}{sub|C} = " + Cc.toFixed(1),
+                rich: {
+                  normal: { fontSize: 14 },
+                  sub:    { fontSize: 10, verticalAlign: 'bottom' }
+              }
+              }
             }
           ]
         }
@@ -459,15 +470,33 @@ function plotKVKGlob(inputValues, siebdurchmesser) {
         data: [
           {
           coord: [d10, 10],
-          label: { formatter: 'd_10 = ' + d10.toFixed(3) + ' mm' }
+          label: {
+            formatter: '{normal|d}{sub|10} = ' + d10.toFixed(3) + ' mm',
+            rich: {
+              normal: { fontSize: 14 },
+              sub: { fontSize: 10, verticalAlign: 'bottom' }
+            }
+          }
           },
           {
           coord: [d30, 30],
-          label: { formatter: 'd_30 = ' + d30.toFixed(3) + ' mm' }
+          label: {
+            formatter: '{normal|d}{sub|30} = ' + d30.toFixed(3) + ' mm',
+            rich: {
+              normal: { fontSize: 14 },
+              sub: { fontSize: 10, verticalAlign: 'bottom' }
+            }
+          }
           },
           {
           coord: [d60, 60],
-          label: { formatter: 'd_60 = ' + d60.toFixed(3) + ' mm' }
+          label: {
+            formatter: '{normal|d}{sub|60} = ' + d60.toFixed(3) + ' mm',
+            rich: {
+              normal: { fontSize: 14 },
+              sub: { fontSize: 10, verticalAlign: 'bottom' }
+            }
+          }
           }
           //[d30, 30],
           //[d60, 60]
