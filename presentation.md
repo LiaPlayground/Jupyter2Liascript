@@ -216,22 +216,48 @@ function findIdxOfNearest(array, value) {
   return idx;
 }
 
-// Erzeugt eine lineare Interpolationsfunktion, die für einen gegebenen x-Wert den interpolierten y-Wert zurückgibt.
-// Es wird davon ausgegangen, dass xs aufsteigend sortiert sind.
-function linearInterpolator(xs, ys) {
-  return function(x) {
-    // Falls x außerhalb des Definitionsbereichs liegt
-    if (x <= xs[0]) return ys[0];
-    if (x >= xs[xs.length - 1]) return ys[ys.length - 1];
-    // Suche das Intervall
-    let i = 0;
-    while (xs[i + 1] < x) {
-      i++;
+function pchipInterpolator(xs, ys) {
+  const n = xs.length;
+  const h = Array(n - 1).fill(0).map((_, i) => xs[i + 1] - xs[i]);
+  const delta = Array(n - 1).fill(0).map((_, i) => (ys[i + 1] - ys[i]) / h[i]);
+
+  const m = Array(n).fill(0);
+
+  for (let k = 1; k < n - 1; k++) {
+    if (delta[k - 1] * delta[k] > 0) {
+      const w1 = 2 * h[k] + h[k - 1];
+      const w2 = h[k] + 2 * h[k - 1];
+      m[k] = (w1 + w2) / (w1 / delta[k - 1] + w2 / delta[k]);
+    } else {
+      m[k] = 0;
     }
-    const t = (x - xs[i]) / (xs[i + 1] - xs[i]);
-    return ys[i] + t * (ys[i + 1] - ys[i]);
+  }
+
+  m[0] = delta[0];
+  m[n - 1] = delta[n - 2];
+
+  return function(x) {
+    let i = n - 2;
+    for (let j = 0; j < n - 1; j++) {
+      if (x >= xs[j] && x <= xs[j + 1]) {
+        i = j;
+        break;
+      }
+    }
+
+    const h_i = h[i];
+    const t = (x - xs[i]) / h_i;
+
+    const h00 = (1 + 2 * t) * (1 - t) ** 2;
+    const h10 = t * (1 - t) ** 2;
+    const h01 = t ** 2 * (3 - 2 * t);
+    const h11 = t ** 2 * (t - 1);
+
+    return h00 * ys[i] + h10 * h_i * m[i] + h01 * ys[i + 1] + h11 * h_i * m[i + 1];
   };
 }
+
+
 
 // Berechnet d_n: Für einen gegebenen Anteil (z. B. 10, 30, 60) wird in d_new (im Log‑Raum)
 // der Index gesucht, bei dem der interpolierte Wert am nächsten an Anteil liegt.
@@ -287,7 +313,7 @@ function plotKVKGlob(inputValues, siebdurchmesser) {
   const ysInterp = kumMasseAnteile.slice().reverse().map(v => v * 100);
   
   // Erstelle die Interpolationsfunktion (hier linear interpoliert)
-  const interpFunc = linearInterpolator(xsInterp, ysInterp);
+  const interpFunc = pchipInterpolator(xsInterp, ysInterp);
   
   // Erzeuge d_new als linspace im Log‑Raum (hier 1000 Punkte statt 10000 aus Gründen der Performance)
   const d_new = linspace(Math.min(...logSieb), Math.max(...logSieb), 1000);
@@ -303,31 +329,11 @@ function plotKVKGlob(inputValues, siebdurchmesser) {
   const d30 = d_n(30, d_new, interpFunc);
   const d60 = d_n(60, d_new, interpFunc);
   
-  // Bestimme Gradationsparameter U und Cc sowie entsprechende Klassifizierung
-  const U = d60 / d10;
-  let U_res = 'ungleichförmig';
-  if (U < 5) { U_res = 'gleichförmig'; }
-  if (U >= 15) { U_res = 'sehr ungleichförmig'; }
+  // Bestimme Gradationsparameter Cu und Cc
+  const Cu = d60 / d10;
   
   const Cc = (d30 * d30) / (d60 * d10);
-  let Cc_res = 'kontinuierlich';
-  if (Cc < 1 || Cc > 3) { Cc_res = 'nicht kontinuierlich'; }
-  
-  if (Cc < 1) {
-    if (U < 3) {
-      U_res = 'gleichmäßig gestuft';
-    } else if (U < 6) {
-      U_res = 'eng gestuft';
-    } else if (U <= 15) {
-      U_res = 'mäßig gestuft';
-    }
-  } else if (Cc >= 1 && Cc <= 3 && U > 15) {
-    U_res = 'weit gestuft';
-  } else if (Cc < 0.5 && U > 15) {
-    U_res = 'intermittierend gestuft';
-  } else {
-    U_res = 'Werte';
-  }
+
   
   // 2. Aufbau des ECharts‑Optionsobjekts
 
@@ -392,16 +398,16 @@ function plotKVKGlob(inputValues, siebdurchmesser) {
           symbol: 'none',
           lineStyle: { type: 'dashed', width: 1 },
           data: [
-            { xAxis: 0.002 },
-            { xAxis: 0.006 },
-            { xAxis: 0.02 },
-            { xAxis: 0.063 },
-            { xAxis: 0.2 },
-            { xAxis: 0.63 },
-            { xAxis: 2.0 },
-            { xAxis: 6.3 },
-            { xAxis: 20 },
-            { xAxis: 63 }
+            { xAxis: 0.0020.toFixed(6) },
+            { xAxis: 0.0063.toFixed(6) },
+            { xAxis: 0.0200.toFixed(6) },
+            { xAxis: 0.0630.toFixed(6) },
+            { xAxis: 0.2000.toFixed(6) },
+            { xAxis: 0.6300.toFixed(6) },
+            { xAxis: 2.0000.toFixed(6) },
+            { xAxis: 6.3000.toFixed(6) },
+            { xAxis: 20.0000.toFixed(6) },
+            { xAxis: 63.0000.toFixed(6) }
           ]
         }
       },
@@ -428,18 +434,8 @@ function plotKVKGlob(inputValues, siebdurchmesser) {
           },
           data: [
             {
-              coord: [8, 12],
-              label: {
-                formatter: '{normal|U}{sub|res}: ' + U_res,
-                rich: {
-                  normal: { fontSize: 14 },
-                  sub:    { fontSize: 10, verticalAlign: 'bottom' }
-  }
-}//{ formatter: "U_res: " + U_res }
-            },
-            {
               coord: [8, 5],
-              label: { formatter: "{normal|C}{sub|U} = " + U.toFixed(1) + ", {normal|C}{sub|C} = " + Cc.toFixed(1),
+              label: { formatter: "{normal|C}{sub|U} = " + Cu.toFixed(1) + ", {normal|C}{sub|C} = " + Cc.toFixed(1),
                 rich: {
                   normal: { fontSize: 14 },
                   sub:    { fontSize: 10, verticalAlign: 'bottom' }
