@@ -137,3 +137,21 @@ def plot_KVK_glob(Neuauswertung, Startwerte, Siebdurchmesser):
     fig.tight_layout()
     #fig.savefig('KVK.pdf')
 
+def plot_silo(einwaage, delta_m_silo, einwaage_ges, silo):
+    fig, ax = plt.subplots(figsize=(12, 5),ncols=2)
+    ax[0].plot(einwaage,ls='',marker='d',label='Einwurfmasse')
+    ax[0].plot(delta_m_silo,ls='',marker='d',label='Angezeigte Einwurfmasse')
+
+    ax[1].plot(einwaage_ges,ls='',marker='d',label='Gesamtmasse')
+    ax[1].plot(silo,ls='',marker='d',label='Angezeigte Gesamtmasse')
+
+    ax[1].axhline(einwaage_ges[-1]*(1-.735),label=r'Theorie $d=10$ cm, $h=50$ cm, $n=0.35$, $\varphi=35°$, $\delta = 2\varphi/3$',color='black', ls='--')
+
+    ax[0].set_xlabel('Anzahl Einwürfe')
+    ax[0].set_ylabel(r'$\Delta m$ / g')
+    ax[0].legend()
+
+    ax[1].set_xlabel('Anzahl Einwürfe')
+    ax[1].set_ylabel(r'$m$ / g')
+    ax[1].legend()
+    fig.tight_layout()

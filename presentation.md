@@ -1,6 +1,6 @@
 <!--
 
-author:  Sebastian Zug, Andre Dietrich
+author:  Sebastian Zug, Andre Dietrich, Thomas Nagel
 
 import: https://raw.githubusercontent.com/liaTemplates/PyScript/main/README.md
 
@@ -105,7 +105,7 @@ abgeleitet werden.
 
 ## Variante 1: Interaktive Darstellung ohne Widgets
 
-> Änderungen an den Körnungsparametern könenn direkt im Python Code vorgenommen werden. Für die Ausführung des Codes wird der grüne Button in der Ecke des Codeblocks aktiviert.
+> Änderungen an den Körnungsparametern können direkt im Python Code vorgenommen werden. Für die Ausführung des Codes wird der grüne Button in der Ecke des Codeblocks aktiviert.
 > 
 > Achtung: Die Berechnung dauert einige Sekunden. Falls ein `JsException` Fehler auftritt, bitte mit F5 noch mal laden.
 
@@ -534,3 +534,305 @@ const siebdurchmesser = [63, 31.5, 16, 8, 4, 2, 1, 0.5, 0.25, 0.125, 0.063, 0.00
 
 + Die Widgets es notwendig javascript Code für die Generierung des PyScript Blockes mit variablen Parametern zu verwenden. Darunter leidet die Les- und Testbarkeit des Codes. 
 
+# Siloeffekt
+
+Im Folgenden bauen wir ein interaktives Skript für die Demonstration des Siloeffekts im Rahmen der Schüleruni und ähnlicher Veranstaltungen auf. Diese besteht aus einem Theorieteil sowie einem Versuch, den die Teilnehmenden selbst durchführen.
+
+## Teil 1: Berechnung
+
+Wir nehmen eine zylindrische Geometrie und vollständige Mobilisierung der Wandreibung an.
+
+Alle wirkenden Kräfte werden gesammelt und das vertikale Kräftegleichgewicht gefordert:
+
+$$
+  \downarrow: \quad \sigma_{zz} \pi r^2 - \left( \sigma_{zz} + \frac{\partial \sigma_{zz}}{\partial z}\text{d}z \right) \pi r^2 + \gamma \pi r^2 \text{d}z - K_0 \sigma_{zz} \tan \delta_\text{s} 2\pi r \text{d}z= 0
+$$
+
+Umstellen ergibt ...
+
+$$
+  0 = \left( -\frac{\partial \sigma_{zz}}{\partial z} r + \gamma r - 2 K_0 \sigma_{zz} \tan\delta_\text{s}  \right) \pi r \text{d} z
+$$
+
+... eine sinnvolle Lösung ergibt sich, wenn der Ausdruck in der Klammer verschwindet. Nochmals umstellen ...
+
+$$
+  \frac{\text{d}\sigma_{zz}}{\text{d}z} = \gamma - \frac{2 K_0 \sigma_{zz} \tan \delta_\text{s}}{r}
+$$
+
+... führt auf eine inhomogene, gewöhnliche Differentialgleichung erster Ordnung mit (bislang) konstanten Koeffizienten.
+
+**Aufgaben:**
+
+- Überprüfen Sie die Plausibilität bezüglich $\gamma$, $K_0$, $\tan \delta_\text{s}$ und $r$.
+- Was ist bezüglich des Spannungsanstiegs in einer bestimmten Tiefe zu erwarten?
+
+**Analytische Lösung**
+
+Die Integration erfolgt durch Trennung der Variablen. Es wird angenommen, dass die Oberfläche unbelastet ist, d.h. $\sigma_{zz}(z=0) = 0$.
+
+$$
+\begin{aligned}
+\int \limits_{0}^{\sigma_{zz}} \frac{\text{d}\bar{\sigma}_{zz}}{\displaystyle \gamma - \frac{2 K_0 \bar{\sigma}_{zz} \tan \delta_\text{s}}{r}} &= \int \limits_{0}^{z}\text{d}\bar{z} \\
+-\frac{r}{2 K_0 \tan\delta_\text{s}} \ln \left( \gamma - \frac{2 K_0 \bar{\sigma}_{zz} \tan \delta_\text{s}}{r} \right)\Big|_0^{\sigma_{zz}} &= z \\
+\ln \left(\frac{\gamma r - 2 K_0 \sigma_{zz} \tan \delta_\text{s}}{\gamma r} \right) &= -2 K_0 \tan\delta_\text{s} \frac{z}{r}
+\end{aligned}
+$$
+
+Umstellen nach $\sigma_{zz}$ ergibt die gesuchte Verteilung der Vertikalspannung:
+
+$$
+  \sigma_{zz} = \frac{\gamma r}{2K_0\tan\delta_\text{s}} \left[ 1 - \exp \left(- 2 K_0 \tan\delta_\text{s} \frac{z}{r} \right) \right]
+$$
+
+*Hinweis*: Statt $r$ einzuführen, könnte man das Verhältnis $u/A$ beibehalten, um nicht-kreisförmige Geometrien (z.B. rechteckige Querschnitte oder Kräfte zwischen Wänden) näherungsweise zu berücksichtigen.
+
+Zur Plausibilitätsprüfung kann die Verteilung geplottet werden.
+
+<div id="siloPlot" style="height:800px;"></div>
+
+<script>
+function plotSiloEffect() {
+    var gamma = 18; // kN/m³
+    var phi = 30 * Math.PI / 180; // radians
+    var K0 = 1 - Math.sin(phi);
+    var mu = Math.tan(2/3 * phi);
+
+    var z_values = linspace(0, 20, 100); // depth 0 to 20 m
+
+    var traces = [];
+
+    // Function to calculate sigma_zz
+    function sigma(r, K0, mu, gamma, z) {
+        return z.map(function(z_val) {
+            return gamma * r / (2 * K0 * mu) * (1 - Math.exp(-2 * K0 * mu * z_val / r));
+        });
+    }
+
+    // Plot for various radii
+    [0.5, 1, 3, 10].forEach(function(r) {
+        traces.push({
+            x: sigma(r, K0, mu, gamma, z_values),
+            y: z_values,
+            mode: 'lines',
+            name: 'r = ' + r.toFixed(1) + ' m'
+        });
+    });
+
+    // Reference line: gamma * z
+    traces.push({
+        x: z_values.map(function(z) { return gamma * z; }),
+        y: z_values,
+        mode: 'lines',
+        line: { dash: 'dash', color: 'black' },
+        name: 'γz (no silo effect)'
+    });
+
+    var layout = {
+        title: 'Silo Effect on Vertical Stress σ<sub>zz</sub>',
+        xaxis: { title: 'σ<sub>zz</sub> / kPa' },
+        yaxis: { title: 'z / m', autorange: 'reversed' },
+        legend: { orientation: 'h', y: -0.2 }
+    };
+
+    Plotly.newPlot('siloPlot', traces, layout);
+}
+
+function linspace(start, end, num) {
+    var arr = [];
+    var step = (end - start) / (num - 1);
+    for (var i = 0; i < num; i++) {
+        arr.push(start + step * i);
+    }
+    return arr;
+}
+
+// Dynamically load Plotly and then plot
+function loadPlotlyAndPlot() {
+    var script = document.createElement('script');
+    script.src = "https://cdn.plot.ly/plotly-latest.min.js";
+    script.onload = function() {
+        plotSiloEffect();
+    };
+    document.head.appendChild(script);
+}
+
+loadPlotlyAndPlot();
+</script>
+
+**Aufgabe**
+
+Schätze das Ergebnis des Versuchs vorab mit Hilfe der folgenden Gleichung und gegebenen Größen ab:
+
+$$
+\begin{aligned}
+  m_\text{eff} &= \frac{m_\text{ges} r}{2 h K_0\tan\delta_\text{s}} \left[ 1 - \exp \left(- 2 K_0 \tan\delta_\text{s} \frac{h}{r} \right) \right] 
+  \\
+  m_\text{ges} &= 5.5\,\text{kg}
+  \\
+  h &= 50\,\text{cm},\ r = 5\,\text{cm}
+  \\
+  K_0 &= 0.5
+  \\
+  \delta_\text{s} &= 20°
+\end{aligned}
+$$
+
+
+## Teil 2: Nomogramm
+
+@value_input(porositaet,Porosität in %,35,20,50) \
+@value_input(reibungswinkel,Reibungswinkel in °,35,0,45) \
+@value_input(delta_to_phi,Wandreibungs-Verhältnis,0.33,0.0,0.67) \
+@value_input(hPoint,Höhe h in cm,40,10,80) \
+@value_input(dPoint,Durchmesser d in cm,7,5,10)
+
+<div id='nomogrammPlot' style='height: 800px;'></div>
+
+<script>
+function linspace(start, end, num) {
+    var step = (end - start) / (num - 1);
+    var arr = [];
+    for (var i = 0; i < num; i++) {
+        arr.push(start + i * step);
+    }
+    return arr;
+}
+
+function plotNomogramm(porositaet, reibungswinkel, delta_to_phi, hPoint, dPoint) {
+    var phiRad = reibungswinkel * Math.PI / 180.;
+    var k = 1 - Math.sin(phiRad);
+    var g = 9.81;
+    var rho_s = 2650.0;
+
+    var mu = Math.tan(delta_to_phi*phiRad);
+
+    var lambdaJanssen = 1 / (4 * k * mu);
+    var h_values = linspace(10, 80, 50);
+    var d_values = linspace(5, 10, 50);
+    var rho_schuett = rho_s * (1 - porositaet / 100);
+
+    var hPoint_m = hPoint / 100;
+    var dPoint_m = dPoint / 100;
+    var APoint_m = Math.PI * Math.pow(dPoint_m/ 2, 2);
+    var m_ges_point = rho_schuett * APoint_m * hPoint_m;
+    var m_effective_point = rho_schuett * APoint_m * lambdaJanssen * dPoint_m * (1 - Math.exp(-hPoint_m / (lambdaJanssen * dPoint_m)));
+
+
+    var dataPoints = [];
+
+    d_values.forEach(function(d) {r
+        h_values.forEach(function(h) {
+            var h_m = h / 100;
+            var d_m = d / 100;
+            var A = Math.PI * Math.pow(d_m / 2, 2);
+            var V = A * h_m;
+            var m_ges = rho_schuett * V;
+            var sigma_z = rho_schuett * g * lambdaJanssen * d_m * (1 - Math.exp(-h_m / (lambdaJanssen * d_m)));
+            var F = sigma_z * A;
+            var m_effective = F / g;
+            dataPoints.push({ h: h, d: d, m_effective: m_effective, m_ges : m_ges, reduction: (m_ges - m_effective)/m_ges * 100 });
+        });
+    });
+
+    var trace1 = {
+        x: dataPoints.map(function(p) { return p.h; }),
+        y: dataPoints.map(function(p) { return p.d; }),
+        z: dataPoints.map(function(p) { return p.m_effective; }),
+        mode: 'markers',
+        type: 'contour',
+        colorscale: 'Viridis',
+        colorbar: { title: 'Waagenanzeige (kg)' }
+    };
+
+    var trace2 = {
+        x: [hPoint],
+        y: [dPoint],
+        mode: 'markers+text',
+        type: 'scatter',
+        marker: { color: 'red', size: 10 },
+        text: [m_effective_point.toFixed(2) + ' kg von ' + m_ges_point.toFixed(2) + ' kg<br>' + 
+            ((m_ges_point - m_effective_point)/m_ges_point * 100).toFixed(1) + '% Reduktion'],
+        textposition: 'top right',
+        textfont: { color: 'red'},
+        showlegend: false
+    };
+
+    var trace3 = {
+        x: dataPoints.map(function(p) { return p.h; }),
+        y: dataPoints.map(function(p) { return p.d; }),
+        z: dataPoints.map(function(p) { return p.reduction; }),
+        mode: 'markers',
+        type: 'contour',
+        contours: {
+            coloring: 'none',
+            showlabels: true
+        },
+        line: { color: 'white', width: 2, dash: 'dash' },
+        showscale: false,
+        showlegend: false
+    };
+
+    var layout = {
+        xaxis: { title: 'Höhe h / cm' },
+        yaxis: { title: 'Durchmesser d / cm' }
+    };
+
+    Plotly.newPlot('nomogrammPlot', [trace1, trace2, trace3], layout);
+}
+
+
+const inputValues = [
+  @input(`porositaet`),
+  @input(`reibungswinkel`),
+  @input(`delta_to_phi`),
+  @input(`hPoint`),
+  @input(`dPoint`)
+];
+
+// Dynamically load Plotly and then plot
+function loadPlotlyAndPlot() {
+    var script = document.createElement('script');
+    script.src = "https://cdn.plot.ly/plotly-latest.min.js";
+    script.onload = function() {
+        plotNomogramm(inputValues[0], inputValues[1], inputValues[2], inputValues[3], inputValues[4]);
+    };
+    document.head.appendChild(script);
+}
+
+loadPlotlyAndPlot();
+</script>
+
+## Teil 3: Versuch
+
+Hier stellen wir nun die Versuchsdaten graphisch dar. 
+
+> Die Versuchsergebnisse können hier direkt in die Python arrays eingegeben werden. Für die Ausführung des Codes wird der grüne Button in der Ecke des Codeblocks aktiviert.
+>
+> *Achtung:* Die Berechnung dauert einige Sekunden. Falls ein `JsException` Fehler auftritt, bitte mit F5 noch mal laden.
+
+
+``` python @PyScript.env
+- matplotlib
+- scipy
+- numpy
+```
+
+@[path](functions.py)
+
+``` python @PyScript.repl
+import matplotlib.pyplot as plt
+import numpy as np
+from functions import *
+
+# Example data for Experiment 1
+einwaage = np.array([452.7,452.6,456.8,574.9,747.3,748.2,724.9,745.7,321.6])
+silo = np.array([496.,952.,1196.,1372.,1464.,1531.,1564.,1577.,1584.])
+#Korrektur des initialen Durchrutschens:
+silo -= silo[0] - einwaage[0]
+delta_m_silo = np.append(silo[0],np.diff(silo))
+einwaage_ges = einwaage.cumsum()
+plot_silo(einwaage, delta_m_silo, einwaage_ges, silo)
+plt.show()
+plt
+```
