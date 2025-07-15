@@ -4,6 +4,8 @@ author:  Sebastian Zug, Andre Dietrich, Thomas Nagel
 
 import: https://raw.githubusercontent.com/liaTemplates/PyScript/main/README.md
 
+script: https://cdn.plot.ly/plotly-latest.min.js
+
 persistent: true
 
 @path
@@ -661,15 +663,17 @@ function linspace(start, end, num) {
 
 // Dynamically load Plotly and then plot
 function loadPlotlyAndPlot() {
-    var script = document.createElement('script');
-    script.src = "https://cdn.plot.ly/plotly-latest.min.js";
-    script.onload = function() {
-        plotSiloEffect();
-    };
-    document.head.appendChild(script);
+    if (!window.Plotly) {
+      setTimeout(loadPlotlyAndPlot, 100)
+    } else {
+      plotSiloEffect();
+      send.lia("LIA: stop")
+    }
 }
 
-loadPlotlyAndPlot();
+setTimeout(loadPlotlyAndPlot, 10);
+
+"LIA: wait"
 </script>
 
 **Aufgabe**
@@ -695,7 +699,7 @@ $$
 
 @value_input(porositaet,Porosität in %,35,20,50) \
 @value_input(reibungswinkel,Reibungswinkel in °,35,0,45) \
-@value_input(delta_to_phi,Wandreibungs-Verhältnis,0.33,0.0,0.67) \
+@value_input(`delta_to_phi`,Wandreibungs-Verhältnis,0.33,0.0,0.67) \
 @value_input(hPoint,Höhe h in cm,40,10,80) \
 @value_input(dPoint,Durchmesser d in cm,7,5,10)
 
@@ -793,26 +797,29 @@ function plotNomogramm(porositaet, reibungswinkel, delta_to_phi, hPoint, dPoint)
     Plotly.newPlot('nomogrammPlot', [trace1, trace2, trace3], layout);
 }
 
+let inputValues = []
 
-const inputValues = [
-  @input(`porositaet`),
-  @input(`reibungswinkel`),
-  @input(`delta_to_phi`),
-  @input(`hPoint`),
-  @input(`dPoint`)
-];
+try {
+  inputValues = JSON.parse("[@input(`porositaet`)," +
+    "@input(`reibungswinkel`)," +
+    "@input(`delta_to_phi`),"+
+    "@input(`hPoint`),"+
+    "@input(`dPoint`)]")
+} catch(e) {}
 
 // Dynamically load Plotly and then plot
 function loadPlotlyAndPlot() {
-    var script = document.createElement('script');
-    script.src = "https://cdn.plot.ly/plotly-latest.min.js";
-    script.onload = function() {
-        plotNomogramm(inputValues[0], inputValues[1], inputValues[2], inputValues[3], inputValues[4]);
-    };
-    document.head.appendChild(script);
+    if (!window.Plotly) {
+      setTimeout(loadPlotlyAndPlot, 100)
+    } else {
+      plotNomogramm(...inputValues);
+      send.lia("LIA: stop")
+    }
 }
 
-loadPlotlyAndPlot();
+setTimeout(loadPlotlyAndPlot, 10)
+
+"LIA: wait"
 </script>
 
 ## Teil 3: Versuch
