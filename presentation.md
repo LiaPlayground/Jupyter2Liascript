@@ -13,6 +13,26 @@ persistent: true
 ```
 @end
 
+@onload
+let path = window.location.search.slice(1).split("/")
+path.pop()
+path = path.join("/")
+
+const preload = `
+- matplotlib
+- scipy
+- numpy
+- paths:
+  - ${path}/functions.py
+`
+
+const pyEnv = document.createElement("py-env")
+
+pyEnv.innerHTML = preload
+
+document.body.appendChild(pyEnv)
+@end
+
 value_input: <span style="display: inline-block; min-width: 9rem">@1:</span> <script 
                 input="range"
                 output="@0"
@@ -109,13 +129,6 @@ abgeleitet werden.
 > 
 > Achtung: Die Berechnung dauert einige Sekunden. Falls ein `JsException` Fehler auftritt, bitte mit F5 noch mal laden.
 
-``` python @PyScript.env
-- matplotlib
-- scipy
-- numpy
-```
-
-@[path](functions.py)
 
 ``` python @PyScript.repl
 import matplotlib.pyplot as plt
@@ -152,7 +165,6 @@ plt
 @value_input(k,$ 0.063\ \text{mm}$,0,0,2000) \
 @value_input(l,$ 0.001\ \text{mm}$,0,0,2000)
 
-@[path](functions.py)
 
 ``` python @python_evaluate
 import matplotlib.pyplot as plt
@@ -811,14 +823,6 @@ Hier stellen wir nun die Versuchsdaten graphisch dar.
 >
 > *Achtung:* Die Berechnung dauert einige Sekunden. Falls ein `JsException` Fehler auftritt, bitte mit F5 noch mal laden.
 
-
-``` python @PyScript.env
-- matplotlib
-- scipy
-- numpy
-```
-
-@[path](functions.py)
 
 ``` python @PyScript.repl
 import matplotlib.pyplot as plt
